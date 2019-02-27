@@ -7,6 +7,8 @@ import liquibase.configuration.GlobalConfiguration;
 import liquibase.configuration.LiquibaseConfiguration;
 import liquibase.database.Database;
 import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.OracleDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.AbstractChangeGenerator;
@@ -65,9 +67,36 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
             if (referenceDatabase.isLiquibaseObject(table)) {
                 return null;
             }
-            String sql;
-            if (filter.isPresent())
-                sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()) + " WHERE " + filter.get().getFilterCondition();
+            String sql = "";
+
+            //ver el tipo de BD si es oracle o MSQL
+            //ver si estan los index row number
+            //si no esta hacer where directos
+            if (filter.isPresent()) {
+                if ((filter.get().getRowIndex() != null) && (filter.get().getRowCount() != null) && (filter.get().getOrderColumn() != null)){
+                    if (referenceDatabase instanceof OracleDatabase) {
+                        int maxRows = Integer.parseInt(filter.get().getRowIndex()) + Integer.parseInt(filter.get().getRowCount() ) - 1;
+                        sql = String.format("select * from (select a.*, ROWNUM rnum from (select * from %s where %s ORDER BY %s ) a ) where rnum >= %s and rownum <= %s",
+                                referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()),
+                                filter.get().getFilterCondition(),
+                                filter.get().getOrderColumn(),
+                                filter.get().getRowIndex(),
+                                maxRows);
+                        //"SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()) + " WHERE " + filter.get().getFilterCondition();
+                        // select * from (select a.*, ROWNUM rnum from (select * from T_FOTO_STOCK where CD_EMPRESA = 10000 ORDER BY DT_FABRICACAO ) a ) where rnum >= 1 and rownum <= 5
+                    } else if (referenceDatabase instanceof MSSQLDatabase) {
+                        sql = String.format("SELECT * FROM   %s where %s ORDER BY %s asc OFFSET %s ROWS FETCH NEXT %s ROWS ONLY",
+                                referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()),
+                                filter.get().getFilterCondition(),
+                                filter.get().getOrderColumn(),
+                                filter.get().getRowIndex(),
+                                filter.get().getRowCount());
+                        //SELECT * FROM   T_STOCK_MAESTRO where NU_MAESTRO_STOCK > 2 ORDER BY DT_ADDROW asc OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY
+                    }
+                }else {
+                    sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()) + " WHERE " + filter.get().getFilterCondition();
+                }
+            }
             else
                 sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName());
 
@@ -114,7 +143,8 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
                         column.setValue(value.toString().replace("\\", "\\\\"));
                     }
 
-                    change.addColumn(column);
+                    if (!column.getName().toUpperCase().equals("RNUM"))
+                        change.addColumn(column);
 
                 }
 
