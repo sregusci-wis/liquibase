@@ -116,4 +116,9 @@ public class MissingForeignKeyChangeGenerator extends AbstractChangeGenerator im
 
         return new Change[] { change };
     }
+
+    @Override
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain, CustomFilter filter) {
+        return new Change[0];
+    }
 }

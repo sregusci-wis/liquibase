@@ -120,6 +120,11 @@ public class MissingPrimaryKeyChangeGenerator extends AbstractChangeGenerator im
 
     }
 
+    @Override
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain, CustomFilter filter) {
+        return new Change[0];
+    }
+
     protected AddPrimaryKeyChange createAddPrimaryKeyChange() {
         return new AddPrimaryKeyChange();
     }

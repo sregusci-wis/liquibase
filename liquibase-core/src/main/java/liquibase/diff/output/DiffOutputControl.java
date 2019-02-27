@@ -37,6 +37,7 @@ public class DiffOutputControl {
 
     private ObjectChangeFilter objectChangeFilter;
 
+
     public DiffOutputControl() {
         includeSchema = true;
         includeCatalog = true;

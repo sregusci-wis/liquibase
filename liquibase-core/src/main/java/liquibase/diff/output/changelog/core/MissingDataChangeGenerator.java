@@ -24,6 +24,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class MissingDataChangeGenerator extends AbstractChangeGenerator implements MissingObjectChangeGenerator {
 
@@ -51,17 +52,24 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
 
     @Override
     public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl outputControl, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain) {
+        return getMissing((Data) missingObject, outputControl, referenceDatabase, Optional.empty());
+    }
+
+    private Change[] getMissing(Data missingObject, DiffOutputControl outputControl, Database referenceDatabase, Optional<CustomFilter> filter ) {
         Statement stmt = null;
         ResultSet rs = null;
         try {
-            Data data = (Data) missingObject;
+            Data data = missingObject;
 
             Table table = data.getTable();
             if (referenceDatabase.isLiquibaseObject(table)) {
                 return null;
             }
-
-            String sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName());
+            String sql;
+            if (filter.isPresent())
+                sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()) + " WHERE " + filter.get().getFilterCondition();
+            else
+                sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName());
 
             stmt = ((JdbcConnection) referenceDatabase.getConnection()).createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             stmt.setFetchSize(1000);
@@ -71,8 +79,8 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                 columnNames.add(rs.getMetaData().getColumnName(i + 1));
             }
-
-            List<Change> changes = new ArrayList<>();
+            //cambiar capacity a el total de registro que hay para guardar
+            List<Change> changes = new ArrayList<>(10000000);
             while (rs.next()) {
                 InsertDataChange change = new InsertDataChange();
                 if (outputControl.getIncludeCatalog()) {
@@ -132,5 +140,10 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
                 }
             }
         }
+    }
+
+    @Override
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl outputControl, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain, CustomFilter filter) {
+        return getMissing((Data) missingObject, outputControl, referenceDatabase,Optional.of(filter));
     }
 }

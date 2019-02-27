@@ -70,6 +70,11 @@ public class MissingIndexChangeGenerator extends AbstractChangeGenerator impleme
         return new Change[] { change };
     }
 
+    @Override
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain, CustomFilter filter) {
+        return new Change[0];
+    }
+
     protected CreateIndexChange createCreateIndexChange() {
         return new CreateIndexChange();
     }

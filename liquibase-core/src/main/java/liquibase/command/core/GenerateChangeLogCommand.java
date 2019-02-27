@@ -44,6 +44,7 @@ public class GenerateChangeLogCommand extends DiffToChangeLogCommand {
     @Override
     protected CommandResult run() throws Exception {
         DiffResult diffResult = createDiffResult();
+        diffResult.setCustomFilter(getCustomFilter());
 
         DiffToChangeLog changeLogWriter = new DiffToChangeLog(diffResult, getDiffOutputControl());
 

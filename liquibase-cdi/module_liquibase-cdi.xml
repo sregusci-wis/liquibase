@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_liquibase-cdi" default="compile.module.liquibase-cdi">
+  <dirname property="module.liquibase-cdi.basedir" file="${ant.file.module_liquibase-cdi}"/>
+  
+  <property name="module.jdk.home.liquibase-cdi" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.liquibase-cdi" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.liquibase-cdi" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.liquibase-cdi" value="-encoding UTF-8 -source 8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="liquibase-cdi.output.dir" value="${module.liquibase-cdi.basedir}/target/classes"/>
+  <property name="liquibase-cdi.testoutput.dir" value="${module.liquibase-cdi.basedir}/target/test-classes"/>
+  
+  <path id="liquibase-cdi.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="liquibase-cdi.module.production.classpath">
+    <path refid="${module.jdk.classpath.liquibase-cdi}"/>
+    <pathelement location="${liquibase-core.output.dir}"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.23.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.25.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.2.3.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.2.3.classpath"/>
+    <path refid="library.maven:_javax.enterprise:cdi-api:1.0-sp4.classpath"/>
+    <path refid="library.maven:_org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.1_spec:1.0.0.beta1.classpath"/>
+    <path refid="library.maven:_javax.annotation:jsr250-api:1.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+  </path>
+  
+  <path id="liquibase-cdi.runtime.production.module.classpath">
+    <pathelement location="${liquibase-cdi.output.dir}"/>
+    <path refid="liquibase-core.runtime.production.module.classpath"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.23.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.25.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.2.3.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.2.3.classpath"/>
+  </path>
+  
+  <path id="liquibase-cdi.module.classpath">
+    <path refid="${module.jdk.classpath.liquibase-cdi}"/>
+    <pathelement location="${liquibase-cdi.output.dir}"/>
+    <pathelement location="${liquibase-core.testoutput.dir}"/>
+    <pathelement location="${liquibase-core.output.dir}"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.23.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.25.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.2.3.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.2.3.classpath"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+    <path refid="library.maven:_org.mockito:mockito-core:1.10.19.classpath"/>
+    <path refid="library.maven:_org.objenesis:objenesis:1.2.classpath"/>
+    <path refid="library.maven:_org.hsqldb:hsqldb:2.3.5.classpath"/>
+    <path refid="library.maven:_org.jboss.weld.se:weld-se:1.1.8.final.classpath"/>
+    <path refid="library.maven:_javax.enterprise:cdi-api:1.0-sp4.classpath"/>
+    <path refid="library.maven:_org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.1_spec:1.0.0.beta1.classpath"/>
+    <path refid="library.maven:_javax.annotation:jsr250-api:1.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+  </path>
+  
+  <path id="liquibase-cdi.runtime.module.classpath">
+    <pathelement location="${liquibase-cdi.testoutput.dir}"/>
+    <pathelement location="${liquibase-cdi.output.dir}"/>
+    <path refid="liquibase-core.runtime.module.classpath"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.23.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.25.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.2.3.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.2.3.classpath"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+    <path refid="library.maven:_org.mockito:mockito-core:1.10.19.classpath"/>
+    <path refid="library.maven:_org.objenesis:objenesis:1.2.classpath"/>
+    <path refid="library.maven:_org.hsqldb:hsqldb:2.3.5.classpath"/>
+    <path refid="library.maven:_org.jboss.weld.se:weld-se:1.1.8.final.classpath"/>
+    <path refid="library.maven:_javax.enterprise:cdi-api:1.0-sp4.classpath"/>
+    <path refid="library.maven:_org.jboss.spec.javax.interceptor:jboss-interceptors-api_1.1_spec:1.0.0.beta1.classpath"/>
+    <path refid="library.maven:_javax.annotation:jsr250-api:1.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.liquibase-cdi">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.liquibase-cdi">
+    <patternset refid="excluded.from.module.liquibase-cdi"/>
+  </patternset>
+  
+  <path id="liquibase-cdi.module.sourcepath">
+    <dirset dir="${module.liquibase-cdi.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="liquibase-cdi.module.test.sourcepath">
+    <dirset dir="${module.liquibase-cdi.basedir}">
+      <include name="src/test/java"/>
+      <include name="src/test/resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.liquibase-cdi" depends="compile.module.liquibase-cdi.production,compile.module.liquibase-cdi.tests" description="Compile module liquibase-cdi"/>
+  
+  <target name="compile.module.liquibase-cdi.production" depends="register.custom.compilers,compile.module.liquibase-core" description="Compile module liquibase-cdi; production classes">
+    <mkdir dir="${liquibase-cdi.output.dir}"/>
+    <javac2 destdir="${liquibase-cdi.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.liquibase-cdi}/javac">
+      <compilerarg line="${compiler.args.liquibase-cdi}"/>
+      <bootclasspath refid="liquibase-cdi.module.bootclasspath"/>
+      <classpath refid="liquibase-cdi.module.production.classpath"/>
+      <src refid="liquibase-cdi.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.liquibase-cdi"/>
+    </javac2>
+    
+    <copy todir="${liquibase-cdi.output.dir}">
+      <fileset dir="${module.liquibase-cdi.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.liquibase-cdi.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.liquibase-cdi.tests" depends="register.custom.compilers,compile.module.liquibase-cdi.production" description="compile module liquibase-cdi; test classes" unless="skip.tests">
+    <mkdir dir="${liquibase-cdi.testoutput.dir}"/>
+    <javac2 destdir="${liquibase-cdi.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.liquibase-cdi}/javac">
+      <compilerarg line="${compiler.args.liquibase-cdi}"/>
+      <bootclasspath refid="liquibase-cdi.module.bootclasspath"/>
+      <classpath refid="liquibase-cdi.module.classpath"/>
+      <src refid="liquibase-cdi.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.liquibase-cdi"/>
+    </javac2>
+    
+    <copy todir="${liquibase-cdi.testoutput.dir}">
+      <fileset dir="${module.liquibase-cdi.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.liquibase-cdi.basedir}/src/test/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.liquibase-cdi" description="cleanup module">
+    <delete dir="${liquibase-cdi.output.dir}"/>
+    <delete dir="${liquibase-cdi.testoutput.dir}"/>
+  </target>
+</project>

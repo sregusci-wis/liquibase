@@ -20,6 +20,7 @@ import liquibase.diff.compare.CompareControl;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.ObjectChangeFilter;
 import liquibase.diff.output.StandardObjectChangeFilter;
+import liquibase.diff.output.changelog.core.CustomFilter;
 import liquibase.exception.*;
 import liquibase.lockservice.LockService;
 import liquibase.lockservice.LockServiceFactory;
@@ -120,7 +121,7 @@ public class Main {
     protected String outputSchemasAs;
     protected String referenceSchemas;
     protected String schemas;
-
+    protected String filterClause;
     /**
      * Entry point. This is what gets executes when starting this program from the command line. This is actually
      * a simple wrapper so that an errorlevel of != 0 is guaranteed in case of an uncaught exception.
@@ -1054,10 +1055,12 @@ public class Main {
                 }
 
                 CatalogAndSchema[] finalTargetSchemas = computedSchemas.finalTargetSchemas;
+                CustomFilter customFilter = new CustomFilter(filterClause);
+
                 CommandLineUtils.doGenerateChangeLog(currentChangeLogFile, database, finalTargetSchemas,
                     StringUtil.trimToNull(diffTypes), StringUtil.trimToNull(changeSetAuthor),
                     StringUtil.trimToNull(changeSetContext), StringUtil.trimToNull(dataOutputDirectory),
-                    diffOutputControl);
+                    diffOutputControl,customFilter);
                 return;
             } else if (COMMANDS.SNAPSHOT.equalsIgnoreCase(command)) {
                 SnapshotCommand snapshotCommand = (SnapshotCommand) CommandFactory.getInstance()
@@ -1523,6 +1526,8 @@ public class Main {
         private static final String REFERENCE_DEFAULT_CATALOG_NAME = "referenceDefaultCatalogName";
         private static final String REFERENCE_DEFAULT_SCHEMA_NAME = "referenceDefaultSchemaName";
         private static final String REFERENCE_DRIVER = "referenceDriver";
+        private static final String FILTER_CLAUSE = "filterClause";
+
         // SONAR confuses this constant name with a hard-coded password:
         @SuppressWarnings("squid:S2068")
         private static final String REFERENCE_PASSWORD = "referencePassword";

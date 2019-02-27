@@ -10,6 +10,7 @@ import liquibase.diff.DiffGeneratorFactory;
 import liquibase.diff.DiffResult;
 import liquibase.diff.compare.CompareControl;
 import liquibase.diff.output.ObjectChangeFilter;
+import liquibase.diff.output.changelog.core.CustomFilter;
 import liquibase.diff.output.report.DiffToReport;
 import liquibase.exception.DatabaseException;
 import liquibase.snapshot.*;
@@ -31,7 +32,7 @@ public class DiffCommand extends AbstractCommand<CommandResult> {
     private SnapshotControl targetSnapshotControl;
     private ObjectChangeFilter objectChangeFilter;
     private CompareControl compareControl;
-
+    private CustomFilter customFilter;
 
     @Override
     public String getName() {
@@ -49,6 +50,15 @@ public class DiffCommand extends AbstractCommand<CommandResult> {
 
     public DiffCommand setReferenceDatabase(Database referenceDatabase) {
         this.referenceDatabase = referenceDatabase;
+        return this;
+    }
+
+    public CustomFilter getCustomFilter() {
+        return customFilter;
+    }
+
+    public DiffCommand setCustomFilter(CustomFilter customFilter) {
+        this.customFilter = customFilter;
         return this;
     }
 

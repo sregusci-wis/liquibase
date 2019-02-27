@@ -235,6 +235,11 @@ public class MissingTableChangeGenerator extends AbstractChangeGenerator impleme
         };
     }
 
+    @Override
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain, CustomFilter filter) {
+        return new Change[0];
+    }
+
     private Map<Column, UniqueConstraint> getSingleColumnUniqueConstraints(Table missingTable) {
         Map<Column, UniqueConstraint> map = new HashMap<>();
         List<UniqueConstraint> constraints = missingTable.getUniqueConstraints() == null ? null : missingTable.getUniqueConstraints();

@@ -5,6 +5,7 @@ import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.core.CustomFilter;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.servicelocator.ServiceLocator;
 import liquibase.structure.DatabaseObject;
@@ -81,6 +82,18 @@ public class ChangeGeneratorFactory {
         }
         //noinspection unchecked
         return new ChangeGeneratorChain(generators);
+    }
+
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, CustomFilter customFilter) {
+        if (!control.shouldOutput(missingObject, comparisionDatabase)) {
+            return null;
+        }
+
+        ChangeGeneratorChain chain = createGeneratorChain(MissingObjectChangeGenerator.class, missingObject.getClass(), referenceDatabase);
+        if (chain == null) {
+            return null;
+        }
+        return chain.fixMissing(missingObject, control, referenceDatabase, comparisionDatabase,customFilter);
     }
 
     public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {

@@ -86,6 +86,11 @@ public class MissingViewChangeGenerator extends AbstractChangeGenerator implemen
 
     }
 
+    @Override
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain, CustomFilter filter) {
+        return new Change[0];
+    }
+
     protected CreateViewChange createViewChange() {
         return new CreateViewChange();
     }

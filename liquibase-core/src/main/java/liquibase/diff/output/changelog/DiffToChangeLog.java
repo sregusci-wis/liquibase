@@ -203,7 +203,15 @@ public class DiffToChangeLog {
         for (DatabaseObject object : sortMissingObjects(missingObjects, diffResult.getReferenceSnapshot().getDatabase())) {
             ObjectQuotingStrategy quotingStrategy = diffOutputControl.getObjectQuotingStrategy();
 
-            Change[] changes = changeGeneratorFactory.fixMissing(object, diffOutputControl, diffResult.getReferenceSnapshot().getDatabase(), diffResult.getComparisonSnapshot().getDatabase());
+            Change[] changes = null;
+
+            if (!diffResult.getCustomFilter().equals("")){
+                changes = changeGeneratorFactory.fixMissing(object, diffOutputControl, diffResult.getReferenceSnapshot().getDatabase(), diffResult.getComparisonSnapshot().getDatabase(),diffResult.getCustomFilter());
+            } else
+            {
+                changes = changeGeneratorFactory.fixMissing(object, diffOutputControl, diffResult.getReferenceSnapshot().getDatabase(), diffResult.getComparisonSnapshot().getDatabase());
+            }
+
             addToChangeSets(changes, createChangeSets, quotingStrategy, created);
         }
 

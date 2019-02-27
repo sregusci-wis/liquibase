@@ -13,6 +13,7 @@ import liquibase.database.core.*;
 import liquibase.diff.compare.CompareControl;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.ObjectChangeFilter;
+import liquibase.diff.output.changelog.core.CustomFilter;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -242,15 +243,15 @@ public class CommandLineUtils {
 
     public static void doGenerateChangeLog(String changeLogFile, Database originalDatabase, String catalogName,
                                            String schemaName, String snapshotTypes, String author, String context,
-                                           String dataDir, DiffOutputControl diffOutputControl) throws
+                                           String dataDir, DiffOutputControl diffOutputControl,CustomFilter customFilter) throws
             IOException, ParserConfigurationException, LiquibaseException {
         doGenerateChangeLog(changeLogFile, originalDatabase, new CatalogAndSchema[]{new CatalogAndSchema(catalogName,
-                schemaName)}, snapshotTypes, author, context, dataDir, diffOutputControl);
+                schemaName)}, snapshotTypes, author, context, dataDir, diffOutputControl,customFilter);
     }
 
     public static void doGenerateChangeLog(String changeLogFile, Database originalDatabase, CatalogAndSchema[]
             schemas, String snapshotTypes, String author, String context, String dataDir, DiffOutputControl
-                                                   diffOutputControl) throws IOException, ParserConfigurationException,
+                                                   diffOutputControl, CustomFilter customFilter) throws IOException, ParserConfigurationException,
             LiquibaseException {
         CompareControl.SchemaComparison[] comparisons = new CompareControl.SchemaComparison[schemas.length];
         int i = 0;
@@ -271,6 +272,7 @@ public class CommandLineUtils {
                 .setDiffOutputControl(diffOutputControl);
         command.setAuthor(author)
                 .setContext(context);
+        command.setCustomFilter(customFilter);
 
         try {
             command.execute();

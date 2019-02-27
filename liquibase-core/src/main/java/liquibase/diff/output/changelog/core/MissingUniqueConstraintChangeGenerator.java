@@ -110,6 +110,11 @@ public class MissingUniqueConstraintChangeGenerator extends AbstractChangeGenera
 
     }
 
+    @Override
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain, CustomFilter filter) {
+        return new Change[0];
+    }
+
     protected AddUniqueConstraintChange createAddUniqueConstraintChange() {
         return new AddUniqueConstraintChange();
     }

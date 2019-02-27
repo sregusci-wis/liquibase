@@ -3,6 +3,7 @@ package liquibase.diff;
 import liquibase.database.Database;
 import liquibase.diff.compare.CompareControl;
 import liquibase.diff.compare.DatabaseObjectComparatorFactory;
+import liquibase.diff.output.changelog.core.CustomFilter;
 import liquibase.exception.DatabaseException;
 import liquibase.snapshot.DatabaseSnapshot;
 import liquibase.structure.DatabaseObject;
@@ -26,6 +27,16 @@ public class DiffResult {
     private Set<DatabaseObject> missingObjects = new HashSet<>();
     private Set<DatabaseObject> unexpectedObjects = new HashSet<>();
     private Map<DatabaseObject, ObjectDifferences> changedObjects = new HashMap<>();
+
+    private CustomFilter customFilter;
+
+    public CustomFilter getCustomFilter() {
+        return customFilter;
+    }
+
+    public void setCustomFilter(CustomFilter customFilter) {
+        this.customFilter = customFilter;
+    }
 
 
     public DiffResult(DatabaseSnapshot referenceDatabaseSnapshot, DatabaseSnapshot comparisonDatabaseSnapshot, CompareControl compareControl) {

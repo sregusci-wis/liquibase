@@ -4,6 +4,7 @@ import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.core.CustomFilter;
 import liquibase.structure.DatabaseObject;
 
 import java.util.Iterator;
@@ -18,7 +19,16 @@ public class ChangeGeneratorChain {
         }
     }
 
+    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, CustomFilter customFilter) {
+        return getChanges(missingObject, control, referenceDatabase, comparisionDatabase, customFilter);
+    }
+
     public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
+        return getChanges(missingObject, control, referenceDatabase, comparisionDatabase,new CustomFilter(""));
+    }
+
+
+    private Change[] getChanges(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase, CustomFilter customFilter) {
         if (missingObject == null) {
             return null;
         }
@@ -45,7 +55,8 @@ public class ChangeGeneratorChain {
         }
 
         MissingObjectChangeGenerator changeGenerator = (MissingObjectChangeGenerator) changeGenerators.next();
-        Change[] changes = changeGenerator.fixMissing(missingObject, control, referenceDatabase, comparisionDatabase, this);
+
+        Change[] changes = changeGenerator.fixMissing(missingObject, control, referenceDatabase, comparisionDatabase, this,customFilter);
         if (changes == null) {
             return null;
         }
