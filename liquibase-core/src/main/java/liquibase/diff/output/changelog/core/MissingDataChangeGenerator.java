@@ -94,11 +94,36 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
                         //SELECT * FROM   T_STOCK_MAESTRO where NU_MAESTRO_STOCK > 2 ORDER BY DT_ADDROW asc OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY
                     }
                 }else {
-                    sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()) + " WHERE " + filter.get().getFilterCondition();
+                    //IF ROWCOUNT PRESENT && DATEFILTER PRESENT --> QUERY FILTRADO AGREGAR FILTRADO POR MAX ROWS
+                    if (filter.get().getRowCount() != null  && filter.get().filterDate != null && filter.get().filterDateColumn != null) {
+                        if (referenceDatabase instanceof OracleDatabase) {
+                            String whereClause = String.format("%s < to_date('%s','YYYY-MM-DD')",filter.get().getFilterDateColumn(),filter.get().getFilterDate());
+
+                            sql = String.format("select * from (select a.*, ROWNUM rnum from (select * from %s where %s ORDER BY %s ) a ) where rnum >= %s and rownum <= %s",
+                                    referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()),
+                                    whereClause,
+                                    filter.get().getOrderColumn(),
+                                    0,
+                                    filter.get().getRowCount());
+                        } else if (referenceDatabase instanceof MSSQLDatabase) {
+                            String date = filter.get().getFilterDate().replaceAll("-","");
+                            String whereClause = String.format("%s < '%s'",filter.get().getFilterDateColumn(),date);
+
+                            sql = String.format("SELECT * FROM   %s where %s ORDER BY %s asc OFFSET %s ROWS FETCH NEXT %s ROWS ONLY",
+                                    referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()),
+                                    whereClause,
+                                    filter.get().getOrderColumn(),
+                                    0,
+                                    filter.get().getRowCount());
+                        }
+                    } else {
+                        sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()) + " WHERE " + filter.get().getFilterCondition();
+                    }
                 }
             }
-            else
+            else {
                 sql = "SELECT * FROM " + referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName());
+            }
 
             stmt = ((JdbcConnection) referenceDatabase.getConnection()).createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             stmt.setFetchSize(1000);

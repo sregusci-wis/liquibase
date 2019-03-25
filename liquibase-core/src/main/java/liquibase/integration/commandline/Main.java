@@ -125,6 +125,8 @@ public class Main {
     protected String rowIndex;
     protected String rowCount;
     protected String orderColumn;
+    protected String filterDate;
+    protected String filterDateColumn;
     /**
      * Entry point. This is what gets executes when starting this program from the command line. This is actually
      * a simple wrapper so that an errorlevel of != 0 is guaranteed in case of an uncaught exception.
@@ -1058,7 +1060,7 @@ public class Main {
                 }
 
                 CatalogAndSchema[] finalTargetSchemas = computedSchemas.finalTargetSchemas;
-                CustomFilter customFilter = new CustomFilter(filterClause,rowCount,rowIndex,orderColumn);
+                CustomFilter customFilter = new CustomFilter(filterClause,rowCount,rowIndex,orderColumn,filterDate,filterDateColumn);
 
                 CommandLineUtils.doGenerateChangeLog(currentChangeLogFile, database, finalTargetSchemas,
                     StringUtil.trimToNull(diffTypes), StringUtil.trimToNull(changeSetAuthor),
@@ -1533,6 +1535,8 @@ public class Main {
         private static final String ROW_INDEX = "rowIndex";
         private static final String ROW_COUNT = "rowCount";
         private static final String ORDER_COLUMN = "orderColumn";
+        private static final String FILTER_DATE = "filterDate";
+        private static final String FILTER_DATE_COLUMN = "filterDateColumn";
 
         // SONAR confuses this constant name with a hard-coded password:
         @SuppressWarnings("squid:S2068")

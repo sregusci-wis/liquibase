@@ -24,7 +24,7 @@ public class ChangeGeneratorChain {
     }
 
     public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
-        return  getChanges(missingObject, control, referenceDatabase, comparisionDatabase,new CustomFilter("","","",""));
+        return  getChanges(missingObject, control, referenceDatabase, comparisionDatabase,new CustomFilter("","","","","",""));
     }
 
 

@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
 public class CustomFilter {
-    public CustomFilter(String filterCondition,String rowCount,String rowIndex, String orderColumn ) {
+    public CustomFilter(String filterCondition,String rowCount,String rowIndex, String orderColumn, String filterDate,String filterDateColumn ) {
         this.filterCondition = filterCondition;
 
         /*
@@ -15,6 +15,9 @@ public class CustomFilter {
         this.rowCount = rowCount;
         this.rowIndex = rowIndex;
         this.orderColumn = orderColumn;
+        this.filterDate = filterDate;
+        this.filterDateColumn = filterDateColumn;
+
     }
 
     //TODO: AGREGAR SANITIZE DE SQL y PARA QUE NO HAYA UN INJECT DE SQL, SI HACEN DELETE O ALGUNA LOCURA
@@ -34,9 +37,17 @@ public class CustomFilter {
     public String getOrderColumn() {
         return orderColumn;
     }
+    public String getFilterDate() {
+        return filterDate;
+    }
+    public String getFilterDateColumn() {
+        return filterDateColumn;
+    }
 
     String filterCondition;
     String rowCount;
     String rowIndex;
     String orderColumn;
+    String filterDate;
+    String filterDateColumn;
 }
