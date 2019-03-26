@@ -26,46 +26,48 @@
         <delete dir="${temp.dir}"/>
     </target>
 
-    <target name="testGenerateChangeLogLegacy">
+
+    <!--<target name="testGenerateChangeLogLegacy">
         <lb:generateChangeLog driver="${jdbc.driver}" url="${jdbc.url}" username="${db.user}" password="${db.password}"
                               outputFile="${temp.dir}/new-change-log.xml"
                               classpathref="basic-classpath"/>
         <au:assertFileExists file="${temp.dir}/new-change-log.xml"/>
-    </target>
+    </target>-->
 
-    <target name="testGenerateChangeLogXmlOutput">
+    <!--<target name="testGenerateChangeLogXmlOutput">
         <lb:generateChangeLog>
             <lb:database driver="${jdbc.driver}" url="${jdbc.url}" user="${db.user}" password="${db.password}"/>
             <lb:xml outputfile="${temp.dir}/new-change-log.xml" encoding="UTF-8"/>
         </lb:generateChangeLog>
         <au:assertFileExists file="${temp.dir}/new-change-log.xml"/>
-    </target>
+    </target>-->
 
-    <target name="testGenerateChangeLogYamlOutput">
+
+    <!--<target name="testGenerateChangeLogYamlOutput">
         <lb:generateChangeLog>
             <lb:database driver="${jdbc.driver}" url="${jdbc.url}" user="${db.user}" password="${db.password}"/>
             <lb:yaml outputfile="${temp.dir}/new-change-log.yaml" encoding="UTF-8"/>
         </lb:generateChangeLog>
         <au:assertFileExists file="${temp.dir}/new-change-log.yaml"/>
-    </target>
+    </target>-->
 
-    <target name="testGenerateChangeLogJsonOutput">
+    <!--<target name="testGenerateChangeLogJsonOutput">
         <lb:generateChangeLog>
             <lb:database driver="${jdbc.driver}" url="${jdbc.url}" user="${db.user}" password="${db.password}"/>
             <lb:json outputfile="${temp.dir}/new-change-log.json" encoding="UTF-8"/>
         </lb:generateChangeLog>
         <au:assertFileExists file="${temp.dir}/new-change-log.json"/>
-    </target>
+    </target>-->
 
-    <target name="testGenerateChangeLogTxtOutput">
+    <!--<target name="testGenerateChangeLogTxtOutput">
         <lb:generateChangeLog>
             <lb:database driver="${jdbc.driver}" url="${jdbc.url}" user="${db.user}" password="${db.password}"/>
             <lb:txt outputfile="${temp.dir}/new-change-log.txt" encoding="UTF-8"/>
         </lb:generateChangeLog>
         <au:assertFileExists file="${temp.dir}/new-change-log.txt"/>
-    </target>
+    </target>-->
 
-    <target name="testGenerateChangeLogMultipleOutputFiles">
+    <!--<target name="testGenerateChangeLogMultipleOutputFiles">
         <lb:generateChangeLog>
             <lb:database driver="${jdbc.driver}" url="${jdbc.url}" user="${db.user}" password="${db.password}"/>
             <lb:xml outputfile="${temp.dir}/new-change-log.xml" encoding="UTF-8"/>
@@ -77,23 +79,23 @@
         <au:assertFileExists file="${temp.dir}/new-change-log.yaml"/>
         <au:assertFileExists file="${temp.dir}/new-change-log.json"/>
         <au:assertFileExists file="${temp.dir}/new-change-log.txt"/>
-    </target>
+    </target>-->
 
-    <target name="testGenerateChangeLogDatabaseRef">
+    <!--<target name="testGenerateChangeLogDatabaseRef">
         <lb:generateChangeLog databaseref="test-db">
             <lb:xml outputfile="${temp.dir}/new-change-log.xml" encoding="UTF-8"/>
         </lb:generateChangeLog>
         <au:assertFileExists file="${temp.dir}/new-change-log.xml"/>
-    </target>
+    </target>-->
 
-    <target name="testGenerateChangeLogBadOutputEncoding">
+    <!--<target name="testGenerateChangeLogBadOutputEncoding">
         <au:expectfailure>
             <lb:generateChangeLog>
                 <lb:database driver="${jdbc.driver}" url="${jdbc.url}" user="${db.user}" password="${db.password}"/>
                 <lb:txt outputfile="${temp.dir}/new-change-log.txt" encoding="REALLY-BAD-ENCODING"/>
             </lb:generateChangeLog>
         </au:expectfailure>
-    </target>
+    </target>-->
 
     <target name="testGenerateChangeLogMissingOutputElement">
         <au:expectfailure>
