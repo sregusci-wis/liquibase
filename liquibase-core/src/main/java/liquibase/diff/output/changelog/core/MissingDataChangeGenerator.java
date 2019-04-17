@@ -97,7 +97,7 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
                     //IF ROWCOUNT PRESENT && DATEFILTER PRESENT --> QUERY FILTRADO AGREGAR FILTRADO POR MAX ROWS
                     if (filter.get().getRowCount() != null  && filter.get().filterDate != null && filter.get().filterDateColumn != null) {
                         if (referenceDatabase instanceof OracleDatabase) {
-                            String whereClause = String.format("%s < to_date('%s','YYYY-MM-DD')",filter.get().getFilterDateColumn(),filter.get().getFilterDate());
+                            String whereClause = String.format("%s > to_date('%s','YYYY-MM-DD')",filter.get().getFilterDateColumn(),filter.get().getFilterDate());
 
                             sql = String.format("select * from (select a.*, ROWNUM rnum from (select * from %s where %s ORDER BY %s ) a ) where rnum >= %s and rownum <= %s",
                                     referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()),
@@ -107,7 +107,7 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
                                     filter.get().getRowCount());
                         } else if (referenceDatabase instanceof MSSQLDatabase) {
                             String date = filter.get().getFilterDate().replaceAll("-","");
-                            String whereClause = String.format("%s < '%s'",filter.get().getFilterDateColumn(),date);
+                            String whereClause = String.format("%s > '%s'",filter.get().getFilterDateColumn(),date);
 
                             sql = String.format("SELECT * FROM   %s where %s ORDER BY %s asc OFFSET %s ROWS FETCH NEXT %s ROWS ONLY",
                                     referenceDatabase.escapeTableName(table.getSchema().getCatalogName(), table.getSchema().getName(), table.getName()),
@@ -144,10 +144,15 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
                     change.setSchemaName(table.getSchema().getName());
                 }
                 change.setTableName(table.getName());
+                //CARGA EL ID DEL CHANGELOG
+                ColumnConfig column = new ColumnConfig();
+                column.setName("CHANGEID");
+                column.setValue("QUE PONGO ACA");
+                change.addColumn(column);
 
                 // loop over all columns for this row
                 for (int i = 0; i < columnNames.size(); i++) {
-                    ColumnConfig column = new ColumnConfig();
+                    column = new ColumnConfig();
                     column.setName(columnNames.get(i));
 
                     Object value = JdbcUtils.getResultSetValue(rs, i + 1);
@@ -172,7 +177,6 @@ public class MissingDataChangeGenerator extends AbstractChangeGenerator implemen
                         change.addColumn(column);
 
                 }
-
                 // for each row, add a new change
                 // (there will be one group per table)
                 changes.add(change);

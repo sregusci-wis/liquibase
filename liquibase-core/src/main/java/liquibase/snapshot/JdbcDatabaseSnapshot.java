@@ -993,8 +993,8 @@ public class JdbcDatabaseSnapshot extends DatabaseSnapshot {
                     if (viewName != null) {
                         sql += " AND a.VIEW_NAME='" + viewName + "'";
                     }
-                    sql += " AND a.VIEW_NAME not in (select mv.name from all_registered_mviews mv where mv.owner=a.owner)";
-
+                    //sql += " AND a.VIEW_NAME not in (select mv.name from all_registered_mviews mv where mv.owner=a.owner)";
+                    sql = "SELECT null as TABLE_CAT, 'WIS' as TABLE_SCHEM, view_name as TABLE_NAME, 'TABLE' as TABLE_TYPE, null as REMARKS, 'TEMP' as OBJECT_BODY, null as EDITIONING_VIEW from user_views";
                     return executeAndExtract(sql, database);
                 }
             });
